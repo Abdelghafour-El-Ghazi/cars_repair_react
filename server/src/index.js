@@ -80,8 +80,8 @@ const cookieParser = require('cookie-parser');
 //     })
 // })
 
-// const port = process.env.PORT || 5000
+const port = process.env.PORT || 5000
 
-// app.listen(port,()=>{
-//     console.log(`server is up and running at ${port}`)
-// }
+app.listen(port,()=>{
+    console.log(`server is up and running at ${port}`)
+})

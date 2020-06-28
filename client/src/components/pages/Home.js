@@ -20,7 +20,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://github.com/Abdelghafour-El-Ghazi">
-        Your Website
+        My Github
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -94,7 +94,7 @@ const Home = ()=> {
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button href='/signup' className={classes.theButton} variant="contained" color="primary">
+                  <Button href='/addcar' className={classes.theButton} variant="contained" color="primary">
                     Get Started
                   </Button>
                 </Grid>

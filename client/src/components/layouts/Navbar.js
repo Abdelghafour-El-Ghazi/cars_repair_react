@@ -9,6 +9,10 @@ import LocalCarWashIcon from '@material-ui/icons/LocalCarWash';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
   
+
+
+
+
   const useStyles = makeStyles((theme) => ({
     icon:{
       fontSize:60,
@@ -16,11 +20,11 @@ import Grid from '@material-ui/core/Grid';
     root: {
       background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
       flexGrow: 1,
-      paddingBottom:'10px',
+      paddingBottom:'6px',
     },
     menuHome: {
-      marginRight: theme.spacing(6),
-      marginLeft: theme.spacing(6),
+      marginRight: theme.spacing(3),
+      marginLeft: theme.spacing(2),
       
     },
     
@@ -46,18 +50,18 @@ import Grid from '@material-ui/core/Grid';
             <Typography variant="h2" >
             <Link to='/' ><LocalCarWashIcon className={classes.icon} /></Link>
 
-            <Link to='/' ><Box fontWeight="fontWeightBold" m={1}>TheCar </Box></Link>
+            <Link to='/' ><Box fontWeight="fontWeightBold" m={0.4}>TheCar </Box></Link>
             </Typography>
             
             </Box>
             <Box   >
-            <Button className={classes.menuHome} size="large" color="inherit"><Link to='/' >Home</Link></Button>
-            <Button  className={classes.menuHome} color="inherit"><Link to='/about'>About</Link></Button>
-            <Button className={classes.menuHome} color="inherit"><Link to='/contact'>Contact</Link></Button>
+            <Link to='/' ><Button className={classes.menuHome} size="large" color="inherit">Home</Button></Link>
+            <Link to='/about' ><Button className={classes.menuHome} size="large" color="inherit">About</Button></Link>
+            <Link to='/contact' ><Button className={classes.menuHome} size="large" color="inherit">Contact</Button></Link>
             </Box>
             <Box  className={classes.menuAccount}>
-            <Button fullWidth={true} color="inherit"><Link to='/login'>SignIn</Link></Button>
-            <Button fullWidth={true} color="inherit"><Link to='/signup'>SignUp</Link></Button>
+            <Link to='/login'><Button className={classes.menuHome} fullWidth={true} color="inherit">SignIn</Button> </Link>
+            <Link to='/signup'><Button className={classes.menuHome} fullWidth={true} color="inherit">SignUp</Button> </Link>
             </Box>
 
             </Grid>

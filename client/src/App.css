@@ -7,3 +7,58 @@ a {
     color:white;
     display: inline-block;
 }
+
+  
+  .boxes {
+    display: grid;
+    grid-gap: 2em;
+    grid-template-columns: repeat(2, minmax(350px, 1fr));
+    grid-template-rows: auto;
+  }
+  
+  .box {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+            flex-direction: column;
+    min-height: 100%;
+  }
+  .box h1 {
+    font-size: 20px;
+    margin: 0 0 1rem 0;
+  }
+  .box .content {
+    padding-top: 1em;
+  }
+  .box ol {
+    margin-left: 0;
+  }
+  .box ol li {
+    -webkit-box-align: center;
+            align-items: center;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: start;
+            justify-content: flex-start;
+  }
+  
+  .button {
+    background: hotpink;
+    border: 1px solid transparent;
+    color: white;
+    margin-right: 1em;
+    padding: 0.25em 0.75em;
+    -webkit-transition: all 0.25s ease-in;
+    transition: all 0.25s ease-in;
+  }
+  .button:hover {
+    background: white;
+    border: 1px solid hotpink;
+    color: #333;
+  }
+
+  img{
+      width: 250px;
+      height:auto;
+  }

@@ -1,57 +1,3 @@
-// import React from 'react';
-// import { makeStyles } from '@material-ui/core/styles';
-// import Card from '@material-ui/core/Card';
-// import CardActionArea from '@material-ui/core/CardActionArea';
-// import CardActions from '@material-ui/core/CardActions';
-// import CardContent from '@material-ui/core/CardContent';
-// import CardMedia from '@material-ui/core/CardMedia';
-// import Button from '@material-ui/core/Button';
-// import Typography from '@material-ui/core/Typography';
-// import Link from '@material-ui/core/Link';
-
-
-// const useStyles = makeStyles({
-//   root: {
-//     maxWidth: 345,
-//   },
-//   media: {
-//     height: 140,
-//   },
-// });
-
-// const MyCars = () => {
-//   const classes = useStyles();
-
-//   return (
-//     <Card className={classes.root}>
-//       <CardActionArea>
-//         <CardMedia
-//           className={classes.media}
-//           image="https://cdn.motor1.com/images/mgl/0AN2V/s1/2019-ford-mustang-bullitt.jpg"
-//           title="Contemplative Reptile"
-//         />
-//         <CardContent>
-//           <Typography gutterBottom variant="h5" component="h2">
-//             Lizard
-//           </Typography>
-//           <Typography variant="body2" color="textSecondary" component="p">
-//             Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-//             across all continents except Antarctica
-//           </Typography>
-//         </CardContent>
-//       </CardActionArea>
-//       <CardActions>
-//       <Link to='/car'>
-//         <Button size="small" color="primary">
-//           Details
-//         </Button>
-//       </Link>
-//       </CardActions>
-//     </Card>
-//   );
-// }
-
-
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
@@ -67,8 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
+import  image from '../../static/images/photo-1511407397940-d57f68e81203.jpg';
 
-import  image from '../static/images/photo-1511407397940-d57f68e81203.jpg';
 
 function Copyright() {
   return (
@@ -117,43 +63,33 @@ const useStyles = makeStyles((theme) => ({
 
 const cards = [1, 2, 3, 4];
 
-function MyCars() {
+function User(props) {
   const classes = useStyles();
-
+  
   return (
     <React.Fragment>
       <CssBaseline />
-      
       <main>
         {/* Hero unit */}
-        <div className={classes.heroContent}>
-          <Container maxWidth="sm">
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-              Welcome to your cars list
-            </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
-              You can find here all of the cars that you trusted us to repair, you can click on each one to find all details about the progress
-            </Typography>
-            
-          </Container>
-        </div>
+        
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            
+              <Grid item key='4' xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
-                  <CardMedia
+                <CardMedia
                     className={classes.cardMedia}
                     image={image}
                     title="Image title"
                   />
+                  
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Car Brand
+                      Mercedes
                     </Typography>
                     <Typography>
-                      In Progress
+                      Done
                     </Typography>
                   </CardContent>
                   <CardActions>
@@ -165,7 +101,32 @@ function MyCars() {
                   </CardActions>
                 </Card>
               </Grid>
-            ))}
+              <Grid item key='1' xs={12} sm={6} md={4}>
+                <Card className={classes.card}>
+                <CardMedia
+                    className={classes.cardMedia}
+                    image={image}
+                    title="Image title"
+                  />
+                  <CardContent className={classes.cardContent}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      BMW
+                    </Typography>
+                    <Typography>
+                      In Progress...
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small" color="primary">
+                      Details
+                      
+                    </Button>
+                   
+                  </CardActions>
+                </Card>
+              </Grid>
+              
+            
           </Grid>
         </Container>
       </main>
@@ -184,4 +145,4 @@ function MyCars() {
   );
 }
 
-export default MyCars;
+export default User;

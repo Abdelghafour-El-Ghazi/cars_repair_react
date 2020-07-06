@@ -7,8 +7,14 @@ a {
     color:white;
     display: inline-block;
 }
-
+/* ul{
+  padding: 30px 50px !important;
   
+}
+li{
+  display: block !important;
+  padding: 10px 20px !important;
+} */
   .boxes {
     display: grid;
     grid-gap: 2em;

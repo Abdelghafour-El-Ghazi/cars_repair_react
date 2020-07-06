@@ -31,7 +31,18 @@ var jwt = require('jsonwebtoken');
      },
      tokenExp:{
          type:Number
-     }
+     },
+     cars:[{
+         brand:String,
+         state:String,
+         comments:String,
+         progress:{
+            type:Number,
+            default:0
+        }
+
+         
+     }]
  })
 
 userSchema.pre('save',function(next){
@@ -54,7 +65,7 @@ userSchema.methods.comparePassword = function(plainPassword,cb){
     bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
         if(err) {return cb(err);
         }else{
-        cb(null,isMatch)
+        return cb(null,isMatch)
         }
 
     })
@@ -69,9 +80,23 @@ userSchema.methods.generateToken = function(cb){
     user.token = token
     user.save(function(err,user){
         if(err) return cb(err)
-        cb(null,user)
+        return cb(null,user)
     })
 }
+
+
+
+// userSchema.methods.FindUsers = function(username, callback) {
+//     Blog.find().where("name", username).
+//           exec(function(err, users) {
+//              // docs contains an array of MongooseJS Documents
+//              // so you can return that...
+//              // reverse does an in-place modification, so there's no reason
+//              // to assign to something else ...
+             
+//              callback(err,users);
+//           });
+// };
 
 userSchema.statics.findByToken = function(token,cb){
     var user = this;
@@ -82,6 +107,10 @@ userSchema.statics.findByToken = function(token,cb){
         })
       })
 }
+
+
+
+
 const User = mongoose.model('User',userSchema)
 
  module.exports= {User}

@@ -2,12 +2,13 @@ import 'react-app-polyfill/ie9';
 import 'react-app-polyfill/ie11';
 import 'core-js';
 
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { BrowserRouter } from "react-router-dom";
 
-import Reducer from './reducers';
+import Reducer from './reducers/index';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import promiseMiddleware from 'redux-promise';

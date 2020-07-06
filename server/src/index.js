@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 const config = require('./config/key');
 
@@ -10,16 +11,43 @@ const {User} = require('./models/user');
 
 const {auth} = require('./middleware/auth');
 
-console.log('here');
-mongoose.set('useCreateIndex', true);
-mongoose.connect(config.mongoURI,{useUnifiedTopology:true, useNewUrlParser:true,useFindAndModify:false }).then( ()=>
-console.log('DBconnected')).catch(err => console.err)
-console.log("here again!")
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+    destination:function(req,file,cb){
+        cb(null,'./uploads/')
+    },
+    filename:function(req,file,cb){
+        cb(null,file.filename)
+    }
+})
+
+
+
+const upload = multer({storage:storage})
+
+app.use(cors());
 
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+
+
+mongoose.connect(config.mongoURI,{useUnifiedTopology:true, useNewUrlParser:true,useFindAndModify:false,useCreateIndex: true }).then( ()=>
+console.log('DBconnected')).catch(err => console.err)
+
+
+
+app.post('/addcar',upload.single('CarImage'),(req, res) => {
+    console.log(req.file)
+    res.json(req.file)
+
+
+})
+
+
 
 app.get('/',(req,res)=>{
     res.json({"hello":"I'm happy to deploy our app!!"})
@@ -51,6 +79,7 @@ app.post('/api/user/register',(req,res)=>{
 })
 
 app.post('/api/user/login',(req,res)=>{
+
 User.findOne({email:req.body.email},(err,user)=>{
     if (!user){ 
     return res.json(
@@ -58,22 +87,42 @@ User.findOne({email:req.body.email},(err,user)=>{
         message:"Auth failed, email not found"}
         )
     }
+    else{
+    let match = true;
     user.comparePassword(req.body.password, (err,isMatch)=> {
-        if (!isMatch){
-            return res.json({loginSuccess:false,message:"wrong pasword"})
+        
+        if(err){
+            console.log(err)
         }
 
+        if (!isMatch){
+            match = false
+            return res.json({loginSuccess:false,message:"wrong pasword"})
+            
+        }
+
+        
             
         })
+    setTimeout(()=>{    
+    if (match){    
     user.generateToken((err,user)=>{
-        if (err) return res.status(400).send(err)
+        // if (err) return res.status(400).send(err)
+        if (err) console.log(err)
         res.cookie('oneAuth',user.token)
            .status(200)
            .json({
                loginSuccess:true
            })
     })
-})
+}
+    },3000)
+    
+}
+}
+
+ )
+ 
 })
 
 app.get('/api/user/logout',auth,(req,res)=>{
@@ -81,6 +130,18 @@ app.get('/api/user/logout',auth,(req,res)=>{
         if (err) return res.json({success:false,err})
         res.status(200).send({success:true})
     })
+})
+
+
+
+
+
+app.get('/api/user/users',(req,res)=>{
+
+    User.find({},{role:0}).then(
+        doc => res.json({success:true,users:doc})
+    )
+    
 })
 
 const port = process.env.PORT || 5000

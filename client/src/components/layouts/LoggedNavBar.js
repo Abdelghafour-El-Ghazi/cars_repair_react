@@ -13,12 +13,31 @@ import Menu from '@material-ui/core/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import axios from 'axios';
+import { USER_SERVER } from '../../Config.js';
+import { withRouter } from 'react-router-dom';
+import  {connect} from 'react-redux';
+
 
 
 
 
 
   const useStyles = makeStyles((theme) => ({
+    MyMenu:{
+      '&ul':{
+      padding: '30px 50px !important'
+      
+    },
+      '&li':{
+      display: 'block !important',
+      padding: '10px 20px !important'
+    },
+    
+    },
+    MuiMenuItem:{
+      color:'red',
+    },
     icon:{
       fontSize:60,
     },
@@ -46,10 +65,10 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
   }));
   
   
-  const LogNavbar = () => {
-    const classes = useStyles();
-    const auth = true;
-    
+const LogNavbar = (props) => {
+  const classes = useStyles();
+  const auth = true;
+  const {user} = props;  
 
   // const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -66,9 +85,17 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
   const handleClose = () => {
     setAnchorEl(null);
   };
-    
-  
-   return (auth ? (
+  const logoutHandler = () => {
+    axios.get(`${USER_SERVER}/logout`).then(response => {
+      if (response.status === 200) {
+        props.history.push("/login");
+      } else {
+        alert('Log Out Failed')
+      }
+    });
+  };
+  // (user.userData && !user.userData.isAuth) ?
+  return ( true ?   ( 
       
       <div  >
         <AppBar   className={classes.root} position="static">
@@ -88,6 +115,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
             <Box   >
             <Link to='/' ><Button  className={classes.menuHome} size="large" color="inherit">Home</Button></Link>
             <Link to='/mycars' ><Button  className={classes.menuHome} size="large" color="inherit">My Cars</Button></Link>
+            <Link to='/appointment' ><Button  className={classes.menuHome} size="large" color="inherit">Make an Appointment</Button></Link>
             </Box>
             <Box  className={classes.menuAccount}>
             {/* <Link to='/login'><Button className={classes.menuHome} fullWidth={true} color="inherit">Profile</Button> </Link> */}
@@ -103,6 +131,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
                 <AccountCircle />
               </IconButton>
               <Menu
+              className={classes.MyMenu}
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
@@ -117,8 +146,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
                 open={open}
                 onClose={handleClose}
               >
-                <Link to='/' ><MenuItem onClick={handleClose} className={classes.MenuLog} > Profile </MenuItem></Link>
-                <Link to='/' ><MenuItem onClick={handleClose} className={classes.MenuLog}>Logout</MenuItem></Link>
+                <Link to='/' ><MenuItem classes={{ root: 'MenuItem'}} onClick={handleClose} className={classes.MenuLog} > Profile </MenuItem></Link>
+                <MenuItem  onClick={logoutHandler} className={classes.MenuLog}>Logout</MenuItem>
               </Menu>
             </div>
           )}
@@ -164,7 +193,13 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
       </div>
     ) )
   }
+
   
+const mapStateToProps = (state)=>{
+  return {user:state.user}
+}
 
 
-export default  LogNavbar;
+const NavBarwithrouter = withRouter(LogNavbar);
+
+export default  connect(mapStateToProps,null)(LogNavbar);

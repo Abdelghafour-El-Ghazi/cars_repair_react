@@ -12,7 +12,9 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import cover from '../media/cover.jpg'
+import cover from '../media/cover.jpg';
+import { registerUser } from "../../actions/user_actions";
+import { useDispatch } from "react-redux";
 
 function Copyright() {
   return (
@@ -63,12 +65,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const  SignUp =  () => {
+const  SignUp =  (props) => {
+
+  const dispatch = useDispatch();
+
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
   const [lastname,setLastname] = useState('')
   const [firstname,setFirstname] = useState('')
-  
+  const [isSubmitting,setSubmitting] = useState(false)
+
   const handleEmailChange = (e)=>{
     setEmail(e.target.value)
   }
@@ -81,6 +87,39 @@ const  SignUp =  () => {
   const handleLastnameChange = (e)=>{
     setLastname(e.target.value)
   }
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setTimeout(() => {
+      let dataToSubmit = {
+        email,
+        password,
+        firstname,
+        lastname
+      };
+
+      dispatch(registerUser(dataToSubmit)).then(response => {
+        if (response.payload.success) {
+          props.history.push("/login");
+        } else {
+          alert(response.payload.err.errmsg)
+          setSubmitting(false);
+        }
+      })
+      .catch(err => {
+          
+        console.log(err)
+          
+        
+      });
+
+      
+    }, 500);
+  }
+
+
   const classes = useStyles();
 
   return (
@@ -95,7 +134,7 @@ const  SignUp =  () => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -164,6 +203,7 @@ const  SignUp =  () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={isSubmitting}
           >
             Sign Up
           </Button>

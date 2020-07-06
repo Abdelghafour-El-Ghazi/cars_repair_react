@@ -14,9 +14,18 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import cover from '../media/cover.jpg';
 import { useDispatch } from "react-redux";
-import SnackBarAlert,{Transition} from '../layouts/snackBarAlert';
 import { loginUser } from "../../actions/user_actions";
 import { withRouter } from "react-router-dom";
+import Snackbar from '@material-ui/core/Snackbar';
+import Slide from '@material-ui/core/Slide';
+
+const Transition = (props)  => {
+  return <Slide {...props} direction="left" />;
+}
+
+const TransitionValid = (props)  => {
+  return <Slide {...props} direction="left" />;
+}
 
 
 function Copyright() {
@@ -75,6 +84,11 @@ const  SignIn =  (props) => {
   const rememberMeChecked = localStorage.getItem("rememberMe") ? true : false;
 
 
+  const [open, setOpen] = useState(false);
+  const [openValid, setOpenValid] = useState(false);
+  const [message,setMessage] = useState('')
+
+
   const [isSubmitting,setSubmitting] = useState(false)
   const [rememberMe, setRememberMe] = useState(rememberMeChecked)
 
@@ -116,18 +130,27 @@ const  SignIn =  (props) => {
             } else {
               localStorage.removeItem('rememberMe');
             }
-            props.history.push("/");
+            setMessage(response.payload.message)
+            setOpenValid(true)
+            setTimeout(() => {setOpenValid(false);
+            setSubmitting(false);
+            props.history.push("/mycars")},5000)
+           
           } else {
-            Transition();
+            setMessage(response.payload.message)
+            setOpen(true);
+            setTimeout(() => setOpen(false),5000);
+            setSubmitting(false);
+            
           }
         })
         .catch(err => {
           
-          setTimeout(() => {
-            console.log('error')
-          }, 3000);
+          console.log(err)
+            
+          
         });
-      setSubmitting(false);
+      
     }, 500);
     
   }
@@ -200,7 +223,20 @@ const  SignIn =  (props) => {
           </form>
         </div>
       </Grid>
-      <SnackBarAlert/>
+      <Snackbar
+        open={open}
+        // onClose={handleClose}
+        TransitionComponent={Transition}
+        message={message}
+        key={'Transition'}
+      />
+      <Snackbar
+        open={openValid}
+        // onClose={handleClose}
+        TransitionComponent={TransitionValid}
+        message={message}
+        key={'TransitionValid'}
+      />
     </Grid>
   );
 }

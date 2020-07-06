@@ -4,8 +4,9 @@ import {
     REGISTER_USER,
     AUTH_USER,
     LOGOUT_USER,
-} from './types';
-import { USER_SERVER } from '../components/Config.js';
+    LIST_USERS
+} from './types/user_types';
+import { USER_SERVER } from '../Config.js';
 
 export function registerUser(dataToSubmit){
     const request = axios.post(`${USER_SERVER}/register`,dataToSubmit)
@@ -43,6 +44,17 @@ export function logoutUser(){
 
     return {
         type: LOGOUT_USER,
+        payload: request
+    }
+}
+
+
+export async function listUsers(){
+    const request = await axios.get(`${USER_SERVER}/users`)
+    .then(response => response.data)
+
+    return {
+        type: LIST_USERS,
         payload: request
     }
 }

@@ -52,7 +52,8 @@
 // }
 
 
-import React from 'react';
+import React,{useEffect,useState} from 'react';
+import {useDispatch} from 'react-redux';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
@@ -67,8 +68,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-
+import { listCars } from "../../actions/user_actions";
 import  image from '../static/images/photo-1511407397940-d57f68e81203.jpg';
+import { withRouter } from 'react-router';
+
+
 
 function Copyright() {
   return (
@@ -115,9 +119,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function createData(id, brand, state) {
+  return { id, brand, state };
+}
+
 const cards = [1, 2, 3, 4];
 
-function MyCars() {
+function MyCars(props) {
+  const dispatch = useDispatch();
+  const [rows,setRows] = useState([])
+  const [isLoading,setIsLoading] = useState(false)
+  useEffect( () => {
+    setIsLoading(true);
+   
+    dispatch(listCars(props.match.params.id)).then(
+      response => {
+        
+        const cars = response.payload.user.cars;
+        console.log(cars)
+        
+        const rowsArray = cars.map(car=>{
+          return createData(car.id,car.brand,car.state)
+        })
+        rows.sort((a, b) => (a.id < b.id ? -1 : 1));
+        
+        setRows(rowsArray)
+        setIsLoading(false);
+      }
+      
+    
+    
+    )
+    
+  
+}, [])
   const classes = useStyles();
 
   return (
@@ -140,8 +175,8 @@ function MyCars() {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {rows.map((card) => (
+              <Grid item key={row.id} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -150,14 +185,14 @@ function MyCars() {
                   />
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Car Brand
+                      {row.brand}
                     </Typography>
                     <Typography>
-                      In Progress
+                      {row.state}
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="primary">
+                    <Button size="small" color="primary" onClick={()=>props.history.push(`/onecar/${row.id}`)} >
                       Details
                       
                     </Button>
@@ -184,4 +219,4 @@ function MyCars() {
   );
 }
 
-export default MyCars;
+export default withRouter(MyCars);

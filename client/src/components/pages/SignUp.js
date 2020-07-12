@@ -72,7 +72,7 @@ const  SignUp =  (props) => {
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
   const [lastname,setLastname] = useState('')
-  const [firstname,setFirstname] = useState('')
+  const [name,setName] = useState('')
   const [isSubmitting,setSubmitting] = useState(false)
 
   const handleEmailChange = (e)=>{
@@ -82,7 +82,7 @@ const  SignUp =  (props) => {
     setPassword(e.target.value)
   }
   const handleFirstnameChange = (e)=>{
-    setFirstname(e.target.value)
+    setName(e.target.value)
   }
   const handleLastnameChange = (e)=>{
     setLastname(e.target.value)
@@ -96,7 +96,7 @@ const  SignUp =  (props) => {
       let dataToSubmit = {
         email,
         password,
-        firstname,
+        name,
         lastname
       };
 
@@ -146,7 +146,7 @@ const  SignUp =  (props) => {
                 id="firstName"
                 label="First Name"
                 autoFocus
-                value={firstname}
+                value={name}
                 onChange={handleFirstnameChange}
                 InputProps={{
                   classes: {

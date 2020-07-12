@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,7 +16,10 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import axios from 'axios';
 import { USER_SERVER } from '../../Config.js';
 import { withRouter } from 'react-router-dom';
-import  {connect} from 'react-redux';
+import  {useSelector,useDispatch} from 'react-redux';
+
+import { listCars } from "../../actions/user_actions";
+
 
 
 
@@ -65,10 +68,27 @@ import  {connect} from 'react-redux';
   }));
   
   
-const LogNavbar = (props) => {
+const LoggedNavBar = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const [role,setRole] = useState(0)
+  useEffect( () => {
+    setIsLoading(true);
+   
+    dispatch(listCars(localStorage.getItem("userId"))).then(
+      response => {
+        
+        const role = response.payload.user.role;
+        setRole(role)
+        setIsLoading(false);
+      })})
+
+  console.log(props)
+  const user = useSelector(state => state.user)
+  console.log(user)
   const classes = useStyles();
   const auth = true;
-  const {user} = props;  
+   
 
   // const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -94,8 +114,70 @@ const LogNavbar = (props) => {
       }
     });
   };
-  // (user.userData && !user.userData.isAuth) ?
-  return ( true ?   ( 
+
+  return (   (user.userData && user.userData.isAuth && role == 1) ?  (
+  <div>
+    <AppBar   className={classes.root} position="static">
+        
+        <Toolbar >
+        <Grid container direction="row" justify="space-between" alignItems="center">
+          <Box >
+          
+           
+          <Typography variant="h2" >
+          <Link to='/' ><LocalCarWashIcon className={classes.icon} /></Link>
+
+          <Link to='/' ><Box fontWeight="fontWeightBold" m={0.4}>TheCar </Box></Link>
+          </Typography>
+          
+          </Box>
+          <Box   >
+          <Link to='/' ><Button  className={classes.menuHome} size="large" color="inherit">Home</Button></Link>
+          <Link to='/users' ><Button  className={classes.menuHome} size="large" color="inherit">Clients</Button></Link>            </Box>
+          <Box  className={classes.menuAccount}>
+          {/* <Link to='/login'><Button className={classes.menuHome} fullWidth={true} color="inherit">Profile</Button> </Link> */}
+          {auth && (
+          <div>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+            className={classes.MyMenu}
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={open}
+              onClose={handleClose}
+            >
+              <Link to='/' ><MenuItem classes={{ root: 'MenuItem'}} onClick={handleClose} className={classes.MenuLog} > Profile </MenuItem></Link>
+              <MenuItem  onClick={logoutHandler} className={classes.MenuLog}>Logout</MenuItem>
+            </Menu>
+          </div>
+        )}
+          </Box>
+
+          </Grid>
+        </Toolbar>
+        
+      </AppBar>
+  </div>
+    
+    
+    ) : (user.userData && user.userData.isAuth && role == 0 ? ( 
       
       <div  >
         <AppBar   className={classes.root} position="static">
@@ -114,9 +196,7 @@ const LogNavbar = (props) => {
             </Box>
             <Box   >
             <Link to='/' ><Button  className={classes.menuHome} size="large" color="inherit">Home</Button></Link>
-            <Link to='/mycars' ><Button  className={classes.menuHome} size="large" color="inherit">My Cars</Button></Link>
-            <Link to='/appointment' ><Button  className={classes.menuHome} size="large" color="inherit">Make an Appointment</Button></Link>
-            </Box>
+            <Link to='/mycars' ><Button  className={classes.menuHome} size="large" color="inherit">My Cars</Button></Link>            </Box>
             <Box  className={classes.menuAccount}>
             {/* <Link to='/login'><Button className={classes.menuHome} fullWidth={true} color="inherit">Profile</Button> </Link> */}
             {auth && (
@@ -191,7 +271,7 @@ const LogNavbar = (props) => {
           
         </AppBar>
       </div>
-    ) )
+    ) ))
   }
 
   
@@ -200,6 +280,6 @@ const mapStateToProps = (state)=>{
 }
 
 
-const NavBarwithrouter = withRouter(LogNavbar);
 
-export default  connect(mapStateToProps,null)(LogNavbar);
+
+export default  withRouter(LoggedNavBar);

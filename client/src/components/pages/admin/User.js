@@ -1,4 +1,5 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
@@ -14,6 +15,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import  image from '../../static/images/photo-1511407397940-d57f68e81203.jpg';
+import { listCars } from "../../../actions/user_actions";
+import { withRouter } from "react-router-dom";
 
 
 function Copyright() {
@@ -61,12 +64,51 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const cards = [1, 2, 3, 4];
+function createData(id, brand, state) {
+  return { id, brand, state };
+}
+
 
 function User(props) {
+
+
+  const [rows,setRows] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  window.localStorage.setItem('user_id', props.match.params.id);
+
+
+useEffect( () => {
+    setIsLoading(true);
+   
+    dispatch(listCars(props.match.params.id)).then(
+      response => {
+        
+        const cars = response.payload.user.cars;
+        console.log(cars)
+        
+        const rowsArray = cars.map(car=>{
+          return createData(car.id,car.brand,car.state)
+        })
+        rows.sort((a, b) => (a.id < b.id ? -1 : 1));
+        
+        setRows(rowsArray)
+        setIsLoading(false);
+      }
+      
+    
+    
+    )
+    
+  
+}, [])
+
   const classes = useStyles();
   
+  
   return (
+    rows.length ? (
+      
     <React.Fragment>
       <CssBaseline />
       <main>
@@ -75,8 +117,8 @@ function User(props) {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            
-              <Grid item key='4' xs={12} sm={6} md={4}>
+          {rows.map( (row) => (
+            <Grid item key='4' xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                 <CardMedia
                     className={classes.cardMedia}
@@ -86,14 +128,14 @@ function User(props) {
                   
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Mercedes
+                      {row.brand}
                     </Typography>
                     <Typography>
-                      Done
+                      {row.state}
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="primary">
+                    <Button size="small" color="primary" onClick={()=>props.history.push(`/onecar/${row.id}`)}>
                       Details
                       
                     </Button>
@@ -101,30 +143,8 @@ function User(props) {
                   </CardActions>
                 </Card>
               </Grid>
-              <Grid item key='1' xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
-                <CardMedia
-                    className={classes.cardMedia}
-                    image={image}
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      BMW
-                    </Typography>
-                    <Typography>
-                      In Progress...
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary">
-                      Details
-                      
-                    </Button>
-                   
-                  </CardActions>
-                </Card>
-              </Grid>
+        
+        ))}
               
             
           </Grid>
@@ -142,7 +162,8 @@ function User(props) {
       </footer>
       {/* End footer */}
     </React.Fragment>
-  );
+  ) : (<div> Loading </div> )
+  )
 }
 
-export default User;
+export default withRouter(User);

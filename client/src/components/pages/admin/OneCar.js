@@ -1,4 +1,6 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -10,6 +12,11 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import CardMedia from '@material-ui/core/CardMedia';
 import  image from '../../static/images/photo-1511407397940-d57f68e81203.jpg';
 import Button from '@material-ui/core/Button';
+import { withRouter } from "react-router-dom";
+import { listCars } from "../../../actions/user_actions";
+
+
+
 
 import Box from '@material-ui/core/Box';
 
@@ -50,12 +57,48 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MainFeaturedPost(props) {
+const OneCar = (props) =>  {
   const [progress, setProgress] = React.useState(10);
   const classes = useStyles();
+  const [rows,setRows] = useState([]);
+  const [car,setCar] = useState({})
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const user_id = localStorage.getItem("user_id") ? localStorage.getItem("user_id") : ''
+
+  const id =  props.match.params.id
+
+
+useEffect( () => {
+    setIsLoading(true);
+
+    if(user_id){
+      dispatch(listCars(user_id)).then(
+        response => {
+          
+          // const cars = response.payload.user.cars;
+          console.log(response.payload)
+          const car = cars.filter((car) => car.id == id )
+          console.log(car[0])
+          setCar(car[0])
+          setProgress(car[0].progress)
+          setIsLoading(false)
+
+    }
+   
+    
+    
   
+)}else{
+  alert("You have to go from the user page and click on the car you want")
+      
+}
+}
+, [])
+
 
   return (
+    !isLoading ? (
     <Paper className={classes.mainFeaturedPost} >
       {/* Increase the priority of the hero background image */}
       
@@ -67,18 +110,16 @@ export default function MainFeaturedPost(props) {
           <img src="https://cdn.motor1.com/images/mgl/0AN2V/s1/2019-ford-mustang-bullitt.jpg" />
         </figure>
             <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-            BMW
+            {car.brand}
             </Typography>
             <Typography variant="h4" color="inherit" paragraph>
-            State :  In Progress...
+            State :  {car.state}
             </Typography>
             <Typography variant="h4" color="inherit" paragraph>
-            Bill :  $2300
+            Bill :  {car.price}
             </Typography>
             <Typography variant="subtitle1"  color='inherit'>
-            Comments : We are working now on fixing this..
-            lorem ips
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Mollitia ratione non architecto, ea modi molestiae. Facere laborum magnam molestiae placeat! Maxime eligendi accusantium assumenda, pariatur est veritatis necessitatibus accusamus cupiditate?
+            Comments : {car.comments}
             </Typography>
             <Button
               type="submit"
@@ -98,12 +139,14 @@ export default function MainFeaturedPost(props) {
       </Box>
       <Box minWidth={35}>
         <Typography variant="body2" color='inherit'>{`${Math.round(
-          20,
+          progress,
         )}%`}</Typography>
       </Box>
     </Box>
  
     </Paper>
-  );
-}
+  ) : (<h1>Loading...</h1>)
+  )
+        }
 
+export default withRouter(OneCar);

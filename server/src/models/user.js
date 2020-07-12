@@ -3,6 +3,9 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 var jwt = require('jsonwebtoken');
 
+
+
+
  const userSchema = mongoose.Schema({
      name:{
          type:String,
@@ -32,17 +35,23 @@ var jwt = require('jsonwebtoken');
      tokenExp:{
          type:Number
      },
-     cars:[{
-         brand:String,
-         state:String,
-         comments:String,
-         progress:{
-            type:Number,
-            default:0
+     cars:[
+        {
+            id_image:String,
+            id:Number,
+            brand:String,
+            state:String,
+            comments:String,
+            CarParts:[],
+            price:Number,
+            progress:{
+               type:Number,
+               default:0
+           }
+        
+            
         }
-
-         
-     }]
+     ]
  })
 
 userSchema.pre('save',function(next){

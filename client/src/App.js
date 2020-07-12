@@ -12,6 +12,7 @@ import MyCars from './components/pages/MyCars';
 import User from './components/pages//admin/User';
 import OneCar from './components/pages//admin/OneCar';
 import CheckOut from './components/pages/checkout/CheckOut';
+import Auth from "./hoc/auth";
 import './App.css';
 
 
@@ -25,17 +26,17 @@ const App = ()=> {
             <LoggedNavbar/>
             
             
-            <Route exact path="/" component={Home}/>
-            <Route path="/contact" component={Contact}/>
-            <Route path="/about" component={About}/>
-            <Route path="/addcar" component={AddCar}/>
-            <Route path="/mycars" component={MyCars}/>
-            <Route path="/checkout" component={CheckOut}/>
-            <Route path='/login' component={SignIn}/>
-            <Route path='/signup' component={SignUp}/>
-            <Route exact path='/users' component={Users}/>
-            <Route exact path='/onecar' component={OneCar}/>
-            <Route path='/users/:id' component={User}/>
+            <Route exact path="/" component={Auth(Home,null)}/>
+            <Route path="/contact" component={Auth(Contact,null)}/>
+            <Route path="/about" component={Auth(About,null)}/>
+            <Route path="/addcar" component={Auth(AddCar,null)}/>
+            <Route path="/mycars" component={Auth(MyCars,null)}/>
+            <Route path="/checkout" component={Auth(CheckOut,null)}/>
+            <Route path='/login' component={Auth(SignIn,null)}/>
+            <Route path='/signup' component={Auth(SignUp,null)}/>
+            <Route exact path='/users' component={Auth(Users,null)}/>
+            <Route exact path='/onecar/:id' component={Auth(OneCar,null)}/>
+            <Route path='/users/:id' component={Auth(User,null)}/>
 
         </Router>
 

@@ -86,7 +86,7 @@ const  SignIn =  (props) => {
 
   const [open, setOpen] = useState(false);
   const [openValid, setOpenValid] = useState(false);
-  const [message,setMessage] = useState('')
+  const [message,setMessage] = useState('Connected')
 
 
   const [isSubmitting,setSubmitting] = useState(false)

@@ -1,7 +1,12 @@
 
 import { useDispatch } from "react-redux";
 import { listUsers } from "../../../actions/user_actions"
+import { delet } from "../../../actions/user_actions"
 import React,{useState,useEffect} from 'react';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Tooltip from '@material-ui/core/Tooltip';
+import Fab from '@material-ui/core/Fab';
+
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -124,6 +129,7 @@ useEffect( () => {
     dispatch(listUsers()).then(
       response => {
         const users = response.payload.users;
+        console.log(users)
         const rowsArray = users.map(user=>{
           return createData(user.name,user.lastname,user.email,user._id)
         })
@@ -204,16 +210,23 @@ useEffect( () => {
 
             
               
-              <TableRow  className={classes.tableRow} key ={row.id} onClick={() => history.push(`/users/${row.id}`)}>
-              <TableCell component="th" scope="row">
+              <TableRow  className={classes.tableRow} key ={row.id} >
+              <TableCell component="th" scope="row" onClick={() => history.push(`/users/${row.id}`)}>
                 {row.firstname}
               </TableCell>
-              <TableCell style={{ width: 160 }} align="left">
+              <TableCell style={{ width: 160 }} align="left" onClick={() => history.push(`/users/${row.id}`)}>
                 {row.lastname}
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
+              <TableCell style={{ width: 160 }} align="right" onClick={() => history.push(`/users/${row.id}`)}>
                 {row.email}
               </TableCell>
+              <Tooltip title="Remove" aria-label="add">
+                  <Fab color="primary" >
+                    <DeleteIcon onClick={() => {dispatch(delet(row.id))
+                    history.push('/users/')
+                    }} />
+                  </Fab>
+                </Tooltip>
             </TableRow>
             
           

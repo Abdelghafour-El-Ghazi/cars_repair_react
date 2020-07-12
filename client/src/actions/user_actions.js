@@ -4,7 +4,11 @@ import {
     REGISTER_USER,
     AUTH_USER,
     LOGOUT_USER,
-    LIST_USERS
+    LIST_USERS,
+    LIST_CARS,
+    DELET,
+    ADD_CAR
+
 } from './types/user_types';
 import { USER_SERVER } from '../Config.js';
 
@@ -55,6 +59,49 @@ export async function listUsers(){
 
     return {
         type: LIST_USERS,
+        payload: request
+    }
+}
+export async function listCars(id){
+    const request = await axios.get(`${USER_SERVER}/users/${id}`)
+    
+    // .then(response => response.data)
+    return {
+        type: LIST_CARS,
+        payload: request
+    }
+}
+export async function delet(id){
+    const request = await axios.get(`${USER_SERVER}/delete/${id}`)
+    
+    // .then(response => response.data)
+    return {
+        type: DELET,
+        payload: request
+    }
+}
+
+
+
+
+export async function addCar(dataToSubmit){
+    const request = await axios({
+        method: 'post',
+        url: `${USER_SERVER}/addcar`,
+        data: dataToSubmit,
+        headers: {'Content-Type': 'multipart/form-data' }
+        })
+        .then(response => response.data
+            )
+        .catch((err) => {
+            //handle error
+            console.log(err);
+        });
+    //  await axios.post(`${USER_SERVER}/addcar`,dataToSubmit)
+    
+
+    return {
+        type: ADD_CAR,
         payload: request
     }
 }
